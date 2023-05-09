@@ -1,0 +1,136 @@
+*{
+    padding: 0;
+    margin: 0;
+    block-size: border-box;
+    font-family: 'Source Sans 3', sans-serif;;
+}
+body{
+	background-color:#EEE9DA;
+}
+header {
+    min-height: 75px;
+    background-color: #6096B4;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav_items{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    width: 100%;
+   
+}
+
+.nav_item{
+    margin:10px;
+}
+
+.nav_item a{
+    text-decoration: none;
+    color: black;
+    transform: translateY(3px);
+    transition: all 1s;
+    font-size:larger;
+}
+.nav_item button{
+    width: 180px;
+    height: 40px;
+    transition: all 1s;
+    transform: translateY(-2px);
+    border: none ;
+    background-color: #BDCDD6;
+    font-size: 18px;
+    color:black;
+} 
+
+nav img {
+    height: 50px;
+    width: 50px;   
+}
+.logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    transform: translateY(3px);
+    transition: all 0.65s;
+    
+}
+
+.desplegable {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+ }
+  
+.desplegable .user {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 45%;
+    transform: translateX(-50%);
+    background-color: #6096B4;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    color: azure;
+    border: solid 1px #fff;
+    border-radius: 0px 20px 0px 20px;
+}
+
+.desplegable .user img {
+    width: 90px;
+    height: 90px;
+}
+  
+.desplegable:hover .user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.nav_item button:hover{
+    background-color: #93BFCF;
+    color: black;
+    cursor: pointer;
+    border-radius: 20px;
+}
+.nav_item button:active{
+   transform: scaleY(1);
+}
+
+.nav_item a:hover{
+    color: #fff;
+    transform: scaleY(1);
+}
+
+.nav_item .logo:hover{
+    color: black;
+    transform: scaleY(1);
+}
+
+ .frame-container {
+    height: 75vh;
+    margin: 20px;
+}
+
+.page_frame{
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+@media(max-width:700px){
+    .nav_items{
+        flex-direction: column;
+        align-items: center;
+    }
+}
