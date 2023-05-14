@@ -10,6 +10,7 @@ public class EmpleadoDao {
     Conexion conexion = new Conexion();
     ResultSet resultSet;
     int result;
+    
     public Empleado Validar (String user, String dni) {
 		Empleado empleado = new Empleado();
 		String consultaSqlString = "select * from empleado where User=? and Dni=?";
@@ -36,7 +37,6 @@ public class EmpleadoDao {
   	public List list() {
   		String consultaSqlString="select * from empleado";
   		List<Empleado>list=new ArrayList<>();
-  		System.out.print("Entre a lista");
   		try {
 			conexion.connect();
 			conexion.preparedStatement = conexion.getConnection().prepareStatement(consultaSqlString);
@@ -54,12 +54,11 @@ public class EmpleadoDao {
 		} catch (Exception e) {
 					System.out.print("Error..."+e);
 		}
-  		System.out.print(list.get(1).getNombre());
   		return list;
   		
   	}
   	public int add(Empleado e) {
-  		String consultaSqlString = "insert into empleado {Dni,Nombres,Telefono,Estado,User} values(?,?,?,?,?)";
+  		String consultaSqlString = "INSERT INTO empleado (Dni, Nombres, Telefono, Estado, User) VALUES (?, ?, ?, ?, ?)";
   		try {
   			conexion.connect();
 			conexion.preparedStatement = conexion.getConnection().prepareStatement(consultaSqlString);
@@ -70,14 +69,14 @@ public class EmpleadoDao {
 			conexion.preparedStatement.setString(5, e.getUser());
 			conexion.preparedStatement.executeUpdate();
 		} catch (Exception e2) {
-			System.out.print("Error..."+e);
+			System.out.println("Error al agregar...."+e2);
 		}
   		return result;
   	}
   	
-  	public Empleado listId(int id) {
+  	public Empleado edit(int id) {
 		Empleado empleado = new Empleado();
-		String consultaSqlString = "select from empleado where IdEmpleado="+id;
+		String consultaSqlString = "SELECT * FROM empleado WHERE IdEmpleado = "+id;
 		try {
 			conexion.connect();
 			conexion.preparedStatement = conexion.getConnection().prepareStatement(consultaSqlString);
@@ -90,27 +89,27 @@ public class EmpleadoDao {
 				empleado.setUser(resultSet.getString(6));
 			}
 		} catch (Exception e) {
-			
+			System.out.print("Error ...."+e);
 		}
 		return empleado;
 	}
   	public int update(Empleado e) {
-  		String consultaSqlString = "update empleado set Dni=?,Nombres=?,Telefono=?,Estado=?,User=? where IdEmpleado=?";
+  		String consultaSqlString = "UPDATE empleado SET Dni=?, Nombres=?, Telefono=?, Estado=?, User=? WHERE IdEmpleado='"+e.getIdEmpleado()+"'";
   		try {
-  			conexion.connect();
-			conexion.preparedStatement = conexion.getConnection().prepareStatement(consultaSqlString);
-			conexion.preparedStatement.setString(1, e.getDni());
-			conexion.preparedStatement.setString(2, e.getNombre());
-			conexion.preparedStatement.setString(3, e.getTelefono());
-			conexion.preparedStatement.setString(4, e.getEstado());
-			conexion.preparedStatement.setString(5, e.getUser());
-			conexion.preparedStatement.setInt(6, e.idEmpleado);
-			conexion.preparedStatement.executeUpdate();
-		} catch (Exception e2) {
-			System.out.print("Error..."+e);
-		}
-  		return result;
+  		    conexion.connect();
+  		    conexion.preparedStatement = conexion.getConnection().prepareStatement(consultaSqlString);
+  		    conexion.preparedStatement.setString(1, e.getDni());
+  		    conexion.preparedStatement.setString(2, e.getNombre());
+  		    conexion.preparedStatement.setString(3, e.getTelefono());
+  		    conexion.preparedStatement.setString(4, e.getEstado());
+  		    conexion.preparedStatement.setString(5, e.getUser());
+  		    result = conexion.preparedStatement.executeUpdate();
+  		} catch (Exception e2) {
+  		    System.out.println("Error al actualizar...." + e2);
+  		}
+  	    return result;
   	}
+  	
   	public void delete(int id) {
   		String consultaSqlString = "delete from empleado where IdEmpleado="+id;
   		try {

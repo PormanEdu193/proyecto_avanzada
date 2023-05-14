@@ -23,9 +23,9 @@
                     </a>
                 </li>
                 <li class="nav_item"><a href="Controlador?menu=home" target="page_frame">Home</a></li>
-                <li class="nav_item"><a href="Controlador?menu=producto" target="page_frame">Producto</a></li>
+                <li class="nav_item"><a href="Controlador?menu=producto&action=list" target="page_frame">Producto</a></li>
                 <li class="nav_item"><a href="Controlador?menu=empleados&action=list" target="page_frame">Empleado</a></li>
-                <li class="nav_item"><a href="Controlador?menu=clientes" target="page_frame">Clientes</a></li>
+                <li class="nav_item"><a href="Controlador?menu=clientes&action=list" target="page_frame">Clientes</a></li>
                 <li class="nav_item"><a href="Controlador?menu=nueva_venta" target="page_frame">Nueva Venta</a></li>
                 <li class="nav_item">
                     <a class="desplegable">

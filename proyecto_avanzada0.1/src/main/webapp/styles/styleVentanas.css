@@ -1,0 +1,146 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.container{
+    display: flex;
+    width: 100%;
+    height: 100vH;
+    background-color: #BDCDD6;
+}
+
+.form_body{
+    height: 90vh;
+    width: 20%;
+    margin: 20px;
+    margin-right: 0;
+    border: solid 1px gray;
+    padding: 5px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+form{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+}
+
+label{
+   font-size: 20px;
+   font-style: normal;
+   color:rgb(73, 70, 70);
+}
+
+.text{
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    margin: 10px;
+    border: solid 0.1px black;
+    padding-left: 8px;
+    font-size: 15px;
+    transition: all 1s;
+    transform: translateY(2px);
+}
+.button{
+    width: 80%;
+    height: 40px;
+    transition: all 0.5s;
+    transform: translateY(-2px);
+    border: solid 1px #6096B4 ;
+    background-color: #93BFCF;
+    font-size: 20px;
+}
+
+.table_body{
+    height: 90vh;
+    width: 80%;
+    margin:20px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table{
+    max-width: 800px;
+    height: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;  
+}
+
+th,td {
+  width: 300px;
+  text-align: start;
+  white-space: nowrap;
+  color:rgb(73, 70, 70);    
+  border-bottom: solid 1px gray;
+}
+
+table a{
+  text-decoration: none;
+  color: black;
+  margin:20px;
+  font-size: larger;
+  transition: all 0.5s;
+  padding: 0px 15px 0px 15px;
+}
+
+table a:hover{
+  color: azure;
+  border: solid 1px #6096B4;
+  background-color: #93BFCF;
+  border-radius: 5px;
+}
+
+table a:active{
+  background-color: #6096B4;
+}
+.button:hover{
+    background-color: #6096B4;
+    cursor: pointer;
+    border-radius: 10px;
+    color: azure;
+}
+.button:active{
+   transform: scaleY(1);
+  
+}
+.text:focus {
+    border-radius: 20px;
+    transform: scaleY(1);
+}
+.text:hover {
+    border-color: rgba(240, 255, 255, 0.3);
+    border-radius: 20px;
+}
+
+
+@media screen and (max-width: 768px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .form_body {
+      width: 90%;
+      margin: 20px 0;
+      border: none;
+    }
+  
+    .table_body {
+      width: 100%;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+  
+    .table {
+      max-width: none;
+    }
+  
+    th, td {
+      width: 100%;
+      text-align: left;
+    }
+  }

@@ -3,8 +3,8 @@ package modelo;
 import java.util.List;
 
 public class Empleado {
-	int  idEmpleado;
-	String dni,nombre, telefono, estado,user;	
+	private int  idEmpleado;
+	private String dni,nombre, telefono, estado,user;	
 	
 	public Empleado() {
 	}
