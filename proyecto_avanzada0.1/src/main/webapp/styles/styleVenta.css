@@ -1,0 +1,256 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    padding: 10px;
+    background-color: #BDCDD6;
+}
+
+.form_body{
+    display: flex;
+    height: 70%;
+    width: 40%;
+    margin-right: 20px;
+    margin-top: 50px;
+    border: solid 1px #93BFCF ;
+    padding: 10px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}   
+
+form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-formItem{
+    width: 100%;
+    display: flex; 
+    margin: 20px 0px 20px 0px;
+}
+.container-formItem-rigth{
+    width: 50%;
+}
+.container-formItem-left{
+    width: 50%;
+}
+.search-cliente{
+    margin-right: 10px;
+}
+
+.first-item{
+    display: flex;
+}
+.first-item input{
+    width: 50%;
+}
+input[name='txt_productData'] {
+    width: 100%;
+}
+input[name='txt_stock'] {
+   width: 50%;
+   margin-left: 10px;
+}
+input[name='txt_clientData'] {
+    width: 50%;
+    margin-left:5px;
+}
+input[name='txt_clientCode'] {
+    width: 70%;
+}
+input[name='txt_productCode'] {
+    width: 70%;
+}
+
+.table_body{
+    width: 60%;
+    padding: 10px;
+    border: solid 1px;
+    overflow-x: auto;
+    margin-top: 20px;
+    border: solid 1px #93BFCF ;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+}
+table{
+    min-width: 100%;
+    max-height: 100%;
+    border-bottom: #6096B4;
+    table-layout: fixed;
+    border-collapse: collapse;  
+}
+
+td,th{
+    text-align: start;
+    white-space: nowrap;
+    color:rgb(73, 70, 70);    
+    border-bottom: solid 1px gray;
+}
+
+table a{
+    text-decoration: none;
+    color: black;
+    font-size: medium;
+    transition: all 0.5s;
+    padding: 0px 15px 0px 15px;
+  }
+.search-btn{    
+    padding: 0px 5px 0px 5px;
+    height: 30px;
+    width: 60px;
+    border: 0.5px solid #93BFCF;
+    background-color: transparent;
+    transition: all 0.7s;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    font-size: 15px;
+    cursor:pointer;
+}
+
+.btn_agregar{
+    width: 60%;
+    transition: all 0.6s;
+    transform: translateY(-2px);
+    border: solid 1px #6096B4 ;
+    background-color: #93BFCF;
+    font-size: 20px;
+}
+
+.text{
+    margin-bottom:15px;
+    height: 30px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    border: solid 0.1px black;
+    font-size: 15px;
+    transition: all 1s;
+    transform: translateY(0.5px);
+    padding-left: 8px;
+}
+
+.buttons{
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 100%;
+    margin-top: 20px;	
+}
+
+.buttons button{
+    margin: 10px;
+    height: 30px;
+    width: 30%;
+    transition: all 0.6s;
+    transform: translateY(-2px);
+    border: solid 1px #6096B4 ;
+    background-color: #93BFCF;
+    font-size: 15px;
+    cursor:pointer;
+}
+.text:focus {
+    border-radius: 20px;
+    transform: scaleY(1);
+}
+.text:hover {
+    border-color: rgba(240, 255, 255, 0.3);
+    border-radius: 20px;
+}
+
+.search-btn:hover{
+    background-color: #93BFCF;
+    color:azure;
+}
+
+.search-btn:active{
+    color: #6096B4;
+}
+
+.btn_agregar:hover{
+    background-color: #6096B4;
+    cursor: pointer;
+    border-radius: 10px;
+    color: azure;
+}
+.btn_agregar:active{
+   transform: scaleY(1);
+}
+table a:hover{
+    color: azure;
+    border: solid 1px #6096B4;
+    background-color: #93BFCF;
+    border-radius: 5px;
+}
+  
+table a:active{
+    background-color: #6096B4;
+}
+.btn_generar:hover{
+    background-color: rgba(0, 128, 0, 0.719);
+    color: white;
+    border-radius: 20px;
+}
+.btn_generar:active{
+    transform: scaleY(1);
+}
+.btn_cancelar:hover{
+    background-color: rgba(214, 18, 18, 0.685);
+    color: white;
+    border-radius: 20px;
+}
+.btn_cancelar:active{
+    transform: scaleY(1);
+}
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .form_body {
+    width: 90%;
+    height: auto;
+    margin: 20px 0;
+  }
+  .table_body {
+    width: 90%;
+    margin-top: 20px;
+  }
+  .container-formItem {
+    flex-direction: column;
+  }
+  .container-formItem-left, .container-formItem-rigth {
+    width: 100%;
+  }
+  .first-item {
+    flex-direction: column;
+    align-items: center;
+  }
+  input[name='txt_stock'] {
+    margin: 10px 0;
+  }
+  input[name='txt_clientData'], input[name='txt_productCode'], input[name='txt_clientCode'] {
+    margin: 10px 0;
+  }
+}
+@media screen and (max-width: 480px) {
+  .first-item input {
+    width: 100%;
+  }
+  input[name='txt_stock'], input[name='txt_clientData'], input[name='txt_productCode'], input[name='txt_clientCode'] {
+    width: 100%;
+    margin: 10px 0;
+  }
+  .btn_agregar {
+    width: 100%;
+    font-size: 15px;
+  }
+  .buttons button {
+    width: 40%;
+    font-size: 12px;
+    margin: 5px;
+  }
+}

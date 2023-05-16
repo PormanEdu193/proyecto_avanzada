@@ -1,5 +1,6 @@
 package controlador;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 
 import jakarta.servlet.http.HttpServlet;
@@ -29,11 +30,15 @@ public class Validar extends HttpServlet {
 		if(actionString.equalsIgnoreCase("Ingresar")) {
 			String userString = request.getParameter("user_txt");
 			String passString = request.getParameter("pass_txt");
+			String idEmpleadoIngresado;
 			empleado = empleadoDao.Validar(userString, passString);
+			idEmpleadoIngresado=String.valueOf(empleado.getIdEmpleado());
+			
 			if(empleado.getUser()!=null) {
 				request.setAttribute("user", empleado);
 				request.getRequestDispatcher("Controlador?menu=principal").forward(request, response);
-				
+				ServletContext context = getServletContext();
+				context.setAttribute("idEmpleadoIngresado", idEmpleadoIngresado);
 			}else {
 				request.getRequestDispatcher("index.jsp").forward(request, response);
 			}

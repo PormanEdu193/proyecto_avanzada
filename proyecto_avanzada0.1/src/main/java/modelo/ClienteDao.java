@@ -10,6 +10,26 @@ public class ClienteDao {
 	Conexion conexion = new Conexion();
 	ResultSet resultSet;
 	
+	public Cliente search(String dni) {
+		Cliente cliente = new Cliente();
+		String colsutaSqlString = "SELECT * FROM cliente WHERE Dni = "+dni;
+		try {
+			conexion.connect();
+			conexion.preparedStatement = conexion.getConnection().prepareStatement(colsutaSqlString);
+			resultSet = conexion.preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				cliente.setIdCliente(resultSet.getInt(1));
+				cliente.setDni(resultSet.getString(2));
+				cliente.setNombre(resultSet.getString(3));
+				cliente.setDireccion(resultSet.getString(4));
+				cliente.setEstado(resultSet.getString(5));
+			}
+		} catch (Exception e) {
+			System.out.println("Error al buscar... "+e);
+		}
+		return cliente;
+	}
+	//CRUD
 	public List list() {
 		List<Cliente>list = new ArrayList<>();
 		String consultaSqlString = "SELECT * FROM cliente";

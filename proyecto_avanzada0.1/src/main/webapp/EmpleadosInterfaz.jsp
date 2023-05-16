@@ -57,9 +57,9 @@
 	                    </tr>
 	                </thead>
 	                <tbody>
-	                	<tr>
-	                		<% List<Empleado> empleados = (List<Empleado>) request.getAttribute("empleados");%>
+	                	<% List<Empleado> empleados = (List<Empleado>) request.getAttribute("empleados");%>
 	                		 <% for(Empleado empleado : empleados) { %>
+	                	<tr>
 	  								<td><%=empleado.getIdEmpleado()%></td>
 	                        		<td><%=empleado.getDni()%></td>
 	                        		<td><%=empleado.getNombre()%></td>

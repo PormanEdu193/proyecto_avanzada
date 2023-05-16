@@ -1,5 +1,7 @@
 	package controlador;
 	
+	import jakarta.security.auth.message.callback.PrivateKeyCallback.Request;
+	import jakarta.servlet.ServletContext;
 	import jakarta.servlet.ServletException;
 	import jakarta.servlet.http.HttpServlet;
 	import jakarta.servlet.http.HttpServletRequest;
@@ -9,11 +11,16 @@
 	import modelo.Empleado;
 	import modelo.EmpleadoDao;
 	import modelo.ProductoDao;
+	import modelo.Venta;
+	import modelo.VentaDao;
 	import modelo.Producto;
 
 	import java.awt.Desktop.Action;
 	import java.io.IOException;
+	import java.time.LocalDateTime;
+	import java.time.format.DateTimeFormatter;
 	import java.util.ArrayList;
+	import java.util.Iterator;
 	import java.util.List;
 	
 	
@@ -25,17 +32,23 @@
 		EmpleadoDao empleadoDao = new EmpleadoDao();
 		ProductoDao productoDao = new ProductoDao();
 		ClienteDao clienteDao = new ClienteDao();
+		Venta venta = new Venta();
+		VentaDao ventaDao = new VentaDao();
 		
-		
-		int idInt;
+		int idInt,itemInt;
+		List<Venta> listVentas = new ArrayList<>();
+		double totalDouble;
+		String serieString,idEmpleadoIngresadoString;
 	    public Controlador() {
-	   
 	    }
 	    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    	String menu = request.getParameter("menu");
 			String action = request.getParameter("action");
 			String actionEdit = request.getParameter("actionEdit");
 			System.out.println(menu+" "+action+" "+actionEdit);
+			ServletContext context = getServletContext();
+			idEmpleadoIngresadoString = (String)context.getAttribute("idEmpleadoIngresado");
+			
 			if(menu.equals("edit")) {
 				switch (actionEdit) {
 				case "empleado":
@@ -53,6 +66,7 @@
 			if (menu.equals("principal")) {
 				request.getRequestDispatcher("principal.jsp").forward(request, response);
 			}
+			
 			if (menu.equals("producto")) {
 				switch (action) {
 				case "list":{
@@ -214,6 +228,109 @@
 				request.getRequestDispatcher("ClientesInterfaz.jsp").forward(request, response);
 			}
 			if (menu.equals("nueva_venta")) {
+				switch (action) {
+					case "buscarCliente":
+						String dniString = request.getParameter("txt_clientCode");
+						cliente = clienteDao.search(dniString);
+						
+						request.setAttribute("clienteBuscar", cliente);
+						request.setAttribute("listVentas", listVentas);
+						request.setAttribute("total", totalDouble);
+						request.setAttribute("productoBuscar", producto);
+						request.setAttribute("listVentas", listVentas);
+						request.setAttribute("serie", serieString);
+						break;
+					case "buscarProducto":
+						request.setAttribute("clienteBuscar", cliente);
+						idInt = Integer.parseInt(request.getParameter("txt_productCode"));
+						Producto producto = productoDao.edit(idInt);
+						producto.setIdProducto(idInt);
+						request.setAttribute("productoBuscar", producto);
+						request.setAttribute("total", totalDouble);
+						request.setAttribute("listVentas", listVentas);
+						request.setAttribute("total", totalDouble);
+						request.setAttribute("serie", serieString);
+						break;
+					case "Agregar":
+						request.setAttribute("clienteBuscar", cliente);
+						totalDouble = 0.0;
+						itemInt++;
+						double subtotal; 
+						int codigoInt = Integer.parseInt(request.getParameter("txt_productCode"));
+						String descripcionString = request.getParameter("txt_productData");
+						Double precioDouble = Double.parseDouble(request.getParameter("txt_productPrice"));
+						int cantidadInt = Integer.parseInt(request.getParameter("txt_productAmount"));
+						if(listVentas.isEmpty()) {
+							Venta venta = new Venta();
+							venta.setItem(itemInt);
+							venta.setCodigo(codigoInt);
+							venta.setDescripcion(descripcionString);
+							venta.setPrecio(precioDouble);
+							venta.setCantidad(cantidadInt);
+							subtotal = venta.getCantidad()*venta.getPrecio();
+							venta.setSubtotal(subtotal);
+							totalDouble = totalDouble + venta.getSubtotal();
+							listVentas.add(venta);
+						}else {
+							int flag = 0;
+							for(Venta venta: listVentas) {
+								if(venta.getDescripcion().equals(descripcionString)) {
+									venta.setCantidad(venta.getCantidad()+cantidadInt);
+									subtotal = venta.getCantidad()*venta.getPrecio();
+									venta.setSubtotal(subtotal);
+									itemInt=venta.getItem();
+									flag=1;
+								}
+								totalDouble = totalDouble + venta.getSubtotal();
+							}
+							if(flag != 1) {
+								Venta venta = new Venta();
+								venta.setItem(itemInt);
+								venta.setCodigo(codigoInt);
+								venta.setDescripcion(descripcionString);
+								venta.setPrecio(precioDouble);
+								venta.setCantidad(cantidadInt);
+								subtotal = venta.getCantidad()*venta.getPrecio();
+								venta.setSubtotal(subtotal);
+								totalDouble = totalDouble + venta.getSubtotal();
+								listVentas.add(venta);
+							}
+						}
+						request.setAttribute("listVentas", listVentas);
+						request.setAttribute("total", totalDouble);
+						request.setAttribute("serie", serieString);
+						break;
+					case "generarVenta":
+						LocalDateTime fecha = LocalDateTime.now();
+				        int idVentasInt = ventaDao.generateSerie();
+				        int idClienteInt = cliente.getIdCliente();
+				        int idEmpleadoString = Integer.parseInt(idEmpleadoIngresadoString);
+				        int numeroSerieInt = Integer.parseInt(serieString);
+				        venta.setIdVenta(idVentasInt);
+				        venta.setIdCliente(idClienteInt);
+				        venta.setIdVendedor(idEmpleadoString);
+				        venta.setCodigo(numeroSerieInt);
+				        venta.setFechaVenta(fecha);
+				        venta.setTotal(totalDouble);
+				        venta.setEstado("1");
+				        ventaDao.add(venta);
+				        //guardar detalle
+				        for (int i = 0; i < listVentas.size(); i++) {
+				        	venta = new Venta();
+							venta.setIdVenta(idVentasInt);
+							venta.setIdProducto(listVentas.get(i).getCodigo());
+							venta.setCantidad(listVentas.get(i).getCantidad());
+							venta.setPrecio(listVentas.get(i).getPrecio());
+							ventaDao.addDetalle(venta);
+						}
+					default:
+						int serie = ventaDao.generateSerie();
+						serieString = String.valueOf(serie);
+						request.setAttribute("serie", serieString);
+						totalDouble = 0.0;
+						listVentas.clear();
+						break;
+				}
 				request.getRequestDispatcher("NuevaVentaInterfaz.jsp").forward(request, response);
 			}
 			if (menu.equals("home")) {
