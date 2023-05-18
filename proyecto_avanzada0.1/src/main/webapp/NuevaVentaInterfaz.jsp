@@ -75,7 +75,6 @@
                                 <td><%=venta.getCantidad()%></td>
                                 <td><%=venta.getSubtotal()%></td>
                         <td>
-                            <a  href="">Editar</a>
                             <a  href="">Eliminar</a>
                         </td>  
                     </tr>
@@ -84,9 +83,11 @@
                 </tbody>
             </table>
             <div class="buttons">
+            
             <form action="Controlador?menu=nueva_venta" method="POST">
              	<button type="submit" class="btn_generar" name="action" value="generarVenta">Generar venta</button>
-                <button class="btn_cancelar" name="btn_cancelar">Cancelar</button>
+                <button type="submit"  value="cancelar" class="btn_cancelar" name="action">Cancelar</button>
+                <button class="btnImprimir">Imprimir</button>
             </form>
                
                 <input type="text" placeholder="Total" value="${total}" name="txt_total" class="text" readonly>

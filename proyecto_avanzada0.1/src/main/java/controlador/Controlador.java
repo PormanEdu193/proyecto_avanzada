@@ -38,16 +38,18 @@
 		int idInt,itemInt;
 		List<Venta> listVentas = new ArrayList<>();
 		double totalDouble;
-		String serieString,idEmpleadoIngresadoString;
+		String serieString,idEmpledoIngresadoString;
 	    public Controlador() {
 	    }
 	    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    	String menu = request.getParameter("menu");
 			String action = request.getParameter("action");
 			String actionEdit = request.getParameter("actionEdit");
-			System.out.println(menu+" "+action+" "+actionEdit);
-			ServletContext context = getServletContext();
-			idEmpleadoIngresadoString = (String)context.getAttribute("idEmpleadoIngresado");
+			String ingreso = request.getParameter("ingreso");
+			if(ingreso != null) {
+				idEmpledoIngresadoString=request.getParameter("idEmpleado");
+			}
+			System.out.println(menu+" "+action+" "+actionEdit+" "+idEmpledoIngresadoString);
 			
 			if(menu.equals("edit")) {
 				switch (actionEdit) {
@@ -258,32 +260,14 @@
 						double subtotal; 
 						int codigoInt = Integer.parseInt(request.getParameter("txt_productCode"));
 						String descripcionString = request.getParameter("txt_productData");
+						int stockInt = Integer.parseInt(request.getParameter("txt_stock"));
 						Double precioDouble = Double.parseDouble(request.getParameter("txt_productPrice"));
 						int cantidadInt = Integer.parseInt(request.getParameter("txt_productAmount"));
-						if(listVentas.isEmpty()) {
-							Venta venta = new Venta();
-							venta.setItem(itemInt);
-							venta.setCodigo(codigoInt);
-							venta.setDescripcion(descripcionString);
-							venta.setPrecio(precioDouble);
-							venta.setCantidad(cantidadInt);
-							subtotal = venta.getCantidad()*venta.getPrecio();
-							venta.setSubtotal(subtotal);
-							totalDouble = totalDouble + venta.getSubtotal();
-							listVentas.add(venta);
-						}else {
-							int flag = 0;
-							for(Venta venta: listVentas) {
-								if(venta.getDescripcion().equals(descripcionString)) {
-									venta.setCantidad(venta.getCantidad()+cantidadInt);
-									subtotal = venta.getCantidad()*venta.getPrecio();
-									venta.setSubtotal(subtotal);
-									itemInt=venta.getItem();
-									flag=1;
-								}
-								totalDouble = totalDouble + venta.getSubtotal();
-							}
-							if(flag != 1) {
+						if(stockInt == 0) {
+							System.out.println("No hay stock");
+						}
+						else {
+							if(listVentas.isEmpty()) {
 								Venta venta = new Venta();
 								venta.setItem(itemInt);
 								venta.setCodigo(codigoInt);
@@ -294,21 +278,55 @@
 								venta.setSubtotal(subtotal);
 								totalDouble = totalDouble + venta.getSubtotal();
 								listVentas.add(venta);
+							}else {
+								int flag = 0;
+								for(Venta venta: listVentas) {
+									if(venta.getDescripcion().equals(descripcionString)) {
+										venta.setCantidad(venta.getCantidad()+cantidadInt);
+										subtotal = venta.getCantidad()*venta.getPrecio();
+										venta.setSubtotal(subtotal);
+										itemInt=listVentas.size();
+										flag=1;
+									}
+									totalDouble = totalDouble + venta.getSubtotal();
+								}
+								if(flag != 1) {
+									Venta venta = new Venta();
+									venta.setItem(itemInt);
+									venta.setCodigo(codigoInt);
+									venta.setDescripcion(descripcionString);
+									venta.setPrecio(precioDouble);
+									venta.setCantidad(cantidadInt);
+									subtotal = venta.getCantidad()*venta.getPrecio();
+									venta.setSubtotal(subtotal);
+									totalDouble = totalDouble + venta.getSubtotal();
+									listVentas.add(venta);
+								}
 							}
-						}
-						request.setAttribute("listVentas", listVentas);
-						request.setAttribute("total", totalDouble);
-						request.setAttribute("serie", serieString);
-						break;
+						}	
+							request.setAttribute("listVentas", listVentas);
+							request.setAttribute("total", totalDouble);
+							request.setAttribute("serie", serieString);
+							break;
+						
 					case "generarVenta":
+						//actualizar stock
+						for (int i = 0; i < listVentas.size(); i++) {
+							int idProducto = listVentas.get(i).getCodigo();
+							int cantidadVenta = listVentas.get(i).getCantidad();
+							Producto productoVenta = new Producto();
+							productoVenta = productoDao.searchProducto(idProducto);
+							productoDao.upDateStock(idProducto, productoVenta.getStock()-cantidadVenta);
+						}
+						//guardar venta
 						LocalDateTime fecha = LocalDateTime.now();
 				        int idVentasInt = ventaDao.generateSerie();
 				        int idClienteInt = cliente.getIdCliente();
-				        int idEmpleadoString = Integer.parseInt(idEmpleadoIngresadoString);
+				        int idEmpleadoInt = Integer.parseInt(idEmpledoIngresadoString);
 				        int numeroSerieInt = Integer.parseInt(serieString);
 				        venta.setIdVenta(idVentasInt);
 				        venta.setIdCliente(idClienteInt);
-				        venta.setIdVendedor(idEmpleadoString);
+				        venta.setIdVendedor(idEmpleadoInt);
 				        venta.setCodigo(numeroSerieInt);
 				        venta.setFechaVenta(fecha);
 				        venta.setTotal(totalDouble);
@@ -323,6 +341,13 @@
 							venta.setPrecio(listVentas.get(i).getPrecio());
 							ventaDao.addDetalle(venta);
 						}
+					case "cancelar":
+						totalDouble = 0.0;
+						listVentas.clear();
+						itemInt=0;
+						totalDouble=0.0;
+						request.setAttribute("serie", serieString);
+						break;
 					default:
 						int serie = ventaDao.generateSerie();
 						serieString = String.valueOf(serie);

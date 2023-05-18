@@ -11,6 +11,38 @@ public class ProductoDao {
 	ResultSet resultSet;
 	int result;
 	
+	public Producto searchProducto(int id) {
+		Producto producto = new Producto();
+		String consultaSqlString = "SELECT * FROM producto WHERE IdProducto="+id;
+		try {
+			conexion.connect();
+			conexion.preparedStatement=conexion.getConnection().prepareStatement(consultaSqlString);
+			resultSet = conexion.preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				producto.setIdProducto(resultSet.getInt(1));
+				producto.setNombre(resultSet.getString(2));
+				producto.setPrecio(resultSet.getDouble(3));
+				producto.setStock(resultSet.getInt(4));
+				producto.setEstado(resultSet.getString(5));
+			}
+		} catch (Exception e) {
+			System.out.println("Error al buscar producto... "+e);
+		}
+		return producto;
+	}
+	
+	public void upDateStock(int id, int stock) {
+		String consultaSqlString = "UPDATE producto SET Stock=? WHERE IdProducto=?";
+		try {
+			conexion.connect();
+			conexion.preparedStatement = conexion.getConnection().prepareStatement(consultaSqlString);
+			conexion.preparedStatement.setInt(1, stock);
+			conexion.preparedStatement.setInt(2, id);
+			conexion.preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			System.out.println("Error al actualizar stock... "+e);
+		}
+	}
 	//CRUD
 	
 		public List list() {
