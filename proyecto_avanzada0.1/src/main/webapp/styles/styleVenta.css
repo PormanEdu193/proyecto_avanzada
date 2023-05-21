@@ -140,6 +140,9 @@ table a{
     margin-top: 20px;	
 }
 
+.buttons form{
+  	flex-direction: row;
+}
 .buttons button{
     margin: 10px;
     height: 30px;
@@ -150,6 +153,16 @@ table a{
     background-color: #93BFCF;
     font-size: 15px;
     cursor:pointer;
+}
+.total{
+	 display: flex;
+    margin: 20px;
+    width: 100%;
+    padding: 25px;
+    justify-content: end;
+}
+.total label{
+    margin-right: 20px;
 }
 .text:focus {
     border-radius: 20px;
@@ -215,6 +228,8 @@ table a:active{
     height: auto;
     margin: 20px 0;
   }
+  
+  
   .table_body {
     width: 90%;
     margin-top: 20px;
@@ -253,4 +268,5 @@ table a:active{
     font-size: 12px;
     margin: 5px;
   }
+ 
 }

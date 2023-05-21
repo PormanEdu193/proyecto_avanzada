@@ -42,6 +42,7 @@
 	    public Controlador() {
 	    }
 	    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	    	
 	    	String menu = request.getParameter("menu");
 			String action = request.getParameter("action");
 			String actionEdit = request.getParameter("actionEdit");
@@ -51,7 +52,7 @@
 			}
 			System.out.println(menu+" "+action+" "+actionEdit+" "+idEmpledoIngresadoString);
 			
-			if(menu.equals("edit")) {
+			if(menu.equals("edit") && actionEdit!=null) {
 				switch (actionEdit) {
 				case "empleado":
 					request.getRequestDispatcher("EditarInterfaz.jsp").forward(request, response);
@@ -69,7 +70,7 @@
 				request.getRequestDispatcher("principal.jsp").forward(request, response);
 			}
 			
-			if (menu.equals("producto")) {
+			if (menu.equals("producto") && action!=null) {
 				switch (action) {
 				case "list":{
 					List list = productoDao.list();
@@ -122,7 +123,7 @@
 				}
 				request.getRequestDispatcher("ProductoInterfaz.jsp").forward(request, response);
 			}
-			if (menu.equals("empleados")) {
+			if (menu.equals("empleados")&& action!=null) {
 			switch (action) {
 				case "list": {
 					List list =empleadoDao.list();
@@ -180,7 +181,7 @@
 					
 			}
 			
-			if (menu.equals("clientes")) {
+			if (menu.equals("clientes")&& action!=null) {
 				switch (action) {
 					case "list":
 						List list = clienteDao.list();
@@ -229,7 +230,7 @@
 				
 				request.getRequestDispatcher("ClientesInterfaz.jsp").forward(request, response);
 			}
-			if (menu.equals("nueva_venta")) {
+			if (menu.equals("nueva_venta")&& action!=null) {
 				switch (action) {
 					case "buscarCliente":
 						String dniString = request.getParameter("txt_clientCode");
@@ -256,7 +257,7 @@
 					case "Agregar":
 						request.setAttribute("clienteBuscar", cliente);
 						totalDouble = 0.0;
-						itemInt++;
+						
 						double subtotal; 
 						int codigoInt = Integer.parseInt(request.getParameter("txt_productCode"));
 						String descripcionString = request.getParameter("txt_productData");
@@ -264,11 +265,13 @@
 						Double precioDouble = Double.parseDouble(request.getParameter("txt_productPrice"));
 						int cantidadInt = Integer.parseInt(request.getParameter("txt_productAmount"));
 						if(stockInt == 0) {
+							 request.setAttribute("mensajeAlerta", "No hay stock disponible.");
 							System.out.println("No hay stock");
 						}
 						else {
 							if(listVentas.isEmpty()) {
 								Venta venta = new Venta();
+								itemInt++;
 								venta.setItem(itemInt);
 								venta.setCodigo(codigoInt);
 								venta.setDescripcion(descripcionString);
@@ -292,6 +295,7 @@
 								}
 								if(flag != 1) {
 									Venta venta = new Venta();
+									itemInt++;
 									venta.setItem(itemInt);
 									venta.setCodigo(codigoInt);
 									venta.setDescripcion(descripcionString);
@@ -322,7 +326,7 @@
 						LocalDateTime fecha = LocalDateTime.now();
 				        int idVentasInt = ventaDao.generateSerie();
 				        int idClienteInt = cliente.getIdCliente();
-				        int idEmpleadoInt = Integer.parseInt(idEmpledoIngresadoString);
+				        int idEmpleadoInt = Integer.parseInt(idEmpledoIngresadoString);	
 				        int numeroSerieInt = Integer.parseInt(serieString);
 				        venta.setIdVenta(idVentasInt);
 				        venta.setIdCliente(idClienteInt);
@@ -341,12 +345,37 @@
 							venta.setPrecio(listVentas.get(i).getPrecio());
 							ventaDao.addDetalle(venta);
 						}
+				        listVentas.clear();
+				        totalDouble=0.0;
+				        itemInt=0;
+				        
 					case "cancelar":
 						totalDouble = 0.0;
 						listVentas.clear();
 						itemInt=0;
 						totalDouble=0.0;
 						request.setAttribute("serie", serieString);
+						break;	
+					case "delete":
+						request.setAttribute("clienteBuscar", cliente);
+						request.setAttribute("serie", serieString);
+						int id = Integer.parseInt(request.getParameter("id"));
+						for (int i=0; i < listVentas.size();i++) {
+							if(listVentas.get(i).getCodigo()==id) {
+								totalDouble = totalDouble-listVentas.get(i).getSubtotal();	
+								if(listVentas.get(i).getItem()==itemInt) {
+									itemInt--;
+								}else{
+									for(int j=i+1;j<listVentas.size()-i;j++) {
+										itemInt=listVentas.get(j).getItem()-1;
+									}
+									itemInt++;
+								}
+								listVentas.remove(i);
+							}
+						}
+						request.setAttribute("listVentas", listVentas);
+						request.setAttribute("total", totalDouble);
 						break;
 					default:
 						int serie = ventaDao.generateSerie();
@@ -356,8 +385,13 @@
 						listVentas.clear();
 						break;
 				}
+				
 				request.getRequestDispatcher("NuevaVentaInterfaz.jsp").forward(request, response);
 			}
+			else if(menu.equals("nueva_venta")) {
+				request.getRequestDispatcher("Controlador?menu=nueva_venta&action=default").forward(request, response);
+			}
+			
 			if (menu.equals("home")) {
 				request.getRequestDispatcher("HomeInterfaz.jsp").forward(request, response);
 			}

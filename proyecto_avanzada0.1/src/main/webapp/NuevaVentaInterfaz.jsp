@@ -13,6 +13,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;1,200;1,300;1,700;1,800&display=swap" rel="stylesheet">
     <title>Document</title>
+    <style>
+  	  @media print {
+ 		.form_body, .buttons, .acciones{
+ 		display:none;
+ 		}
+ 		.text{
+ 			border:none;
+ 			 box-shadow: none;
+ 			  transform: none;
+ 		}
+ 		.table_body{
+ 			width: 100%;
+ 		}
+ 		.total{
+ 			margin:0px;
+ 		}
+ 	  }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -49,7 +67,7 @@
         </div>
 
         <div class="table_body">
-            <label>Numero de serie</label>
+            <label>Numero de serie:</label>
             <input  value="${serie}" type="text" class="text" readonly>
             <table>
                 <thead>
@@ -60,7 +78,7 @@
                         <th>Precio</th>
                         <th>Cantidad</th>
                         <th>Subtotal</th>
-                        <th>Acciones</th>
+                        <th class="acciones">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,24 +93,30 @@
                                 <td><%=venta.getCantidad()%></td>
                                 <td><%=venta.getSubtotal()%></td>
                         <td>
-                            <a  href="">Eliminar</a>
+                            <a  class="acciones" href="Controlador?menu=nueva_venta&action=delete&id=<%=venta.getCodigo()%>">Eliminar</a>
                         </td>  
                     </tr>
                     <%}%>
                    <%}%>
                 </tbody>
             </table>
-            <div class="buttons">
-            
-            <form action="Controlador?menu=nueva_venta" method="POST">
-             	<button type="submit" class="btn_generar" name="action" value="generarVenta">Generar venta</button>
-                <button type="submit"  value="cancelar" class="btn_cancelar" name="action">Cancelar</button>
-                <button class="btnImprimir">Imprimir</button>
-            </form>
-               
-                <input type="text" placeholder="Total" value="${total}" name="txt_total" class="text" readonly>
+            <div class="total">
+            	<label>Total a pagar:</label>
+            	<input type="text" placeholder="Total" value="$ ${total}" name="txt_total" class="text" readonly>
             </div>
+            <div class="buttons">
+            <form  action="Controlador?menu=nueva_venta" method="POST">
+             	<button onclick="print()" type="submit" class="btn_generar" name="action" value="generarVenta">Generar venta</button>
+                <button type="submit"  value="cancelar" class="btn_cancelar" name="action">Cancelar</button>
+            </form>
+            </div>
+            
         </div>
     </div>
+     <% if (request.getAttribute("mensajeAlerta") != null) { %>
+        <script>
+            alert("<%= request.getAttribute("mensajeAlerta") %>");
+        </script>
+    <% } %>
 </body>
 </html>
